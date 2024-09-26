@@ -1,0 +1,119 @@
+import kotlin.math.max
+import kotlin.math.min
+
+data class Player(var nomeDoJogador: String, var levelDoJogador: Int = 1, var bonusDeEquipamento: Int = 0,
+                  var modificadores: Int = 0) {
+    fun totalPower(): Int {
+        return levelDoJogador + bonusDeEquipamento + modificadores
+    }
+
+    fun increaseLevel() {
+        if (levelDoJogador < 10) {
+            levelDoJogador++
+            println("$nomeDoJogador aumentou o nível para $levelDoJogador.")
+        } else {
+            println("$nomeDoJogador já está no nível máximo!")
+        }
+    }
+
+    fun decreaseLevel() {
+        if (levelDoJogador > 1) {
+            levelDoJogador--
+            println("$nomeDoJogador diminuiu o nível para $levelDoJogador.")
+        } else {
+            println("$nomeDoJogador já está no nível mínimo!")
+        }
+    }
+
+    fun increaseEquipmentBonus() {
+        bonusDeEquipamento++
+        println("$nomeDoJogador aumentou o bônus de equipamento para $bonusDeEquipamento.")
+    }
+
+    fun decreaseEquipmentBonus() {
+        if (bonusDeEquipamento > 0) {
+            bonusDeEquipamento--
+            println("$nomeDoJogador diminuiu o bônus de equipamento para $bonusDeEquipamento.")
+        } else {
+            println("$nomeDoJogador não pode diminuir mais o bônus de equipamento!")
+        }
+    }
+
+    fun increaseModifiers() {
+        modificadores++
+        println("$nomeDoJogador aumentou os modificadores para $modificadores.")
+    }
+
+    fun decreaseModifiers() {
+        if (modificadores > 0) {
+            modificadores--
+            println("$nomeDoJogador diminuiu os modificadores para $modificadores.")
+        } else {
+            println("$nomeDoJogador não pode diminuir mais os modificadores!")
+        }
+    }
+}
+
+fun main() {
+    val players = mutableListOf<Player>()
+
+    while (players.size < 6) {
+        println("Digite o nome do jogador ${players.size + 1} (ou 'sair' para finalizar):")
+        val input = readLine()
+        if (input == "sair") break
+        if (!input.isNullOrBlank()) {
+            players.add(Player(input))
+        }
+    }
+
+    while (true) {
+        println("\nJogadores:")
+        players.forEachIndexed { index, player ->
+            println("${index + 1}: ${player.nomeDoJogador} - Level: ${player.levelDoJogador}, " +
+                    "Poder total: ${player.totalPower()}, " +
+                    "Bônus de Equipamento: ${player.bonusDeEquipamento}, " +
+                    "Modificadores: ${player.modificadores}")
+        }
+
+        println("\nEscolha um jogador para modificar (1-${players.size}) ou digite 'sair' para encerrar:")
+        val choice = readLine()
+
+        if (choice == "sair") break
+
+        val playerIndex = choice?.toIntOrNull()?.minus(1)
+        if (playerIndex != null && playerIndex in players.indices) {
+            val player = players[playerIndex]
+            modifyPlayer(player)
+        } else {
+            println("Escolha inválida. Tente novamente.")
+        }
+    }
+}
+
+fun modifyPlayer(player: Player) {
+    while (true) {
+        println("\nModificando jogador: ${player.nomeDoJogador}")
+        println("1: + Level")
+        println("2: - Level")
+        println("3: + Bônus de Equipamento")
+        println("4: - Bônus de Equipamento")
+        println("5: + Modificadores")
+        println("6: - Modificadores")
+        println("7: Voltar")
+
+        when (readLine()) {
+            "1" -> player.increaseLevel()
+            "2" -> player.decreaseLevel()
+            "3" -> player.increaseEquipmentBonus()
+            "4" -> player.decreaseEquipmentBonus()
+            "5" -> player.increaseModifiers()
+            "6" -> player.decreaseModifiers()
+            "7" -> return
+            else -> println("Opção inválida. Tente novamente.")
+        }
+
+        println("${player.nomeDoJogador} - Level: ${player.levelDoJogador}, " +
+                "Poder total: ${player.totalPower()}, Bônus de Equipamento: ${player.bonusDeEquipamento}, " +
+                "Modificadores: ${player.modificadores}")
+    }
+}
